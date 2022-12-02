@@ -12,47 +12,18 @@ var moveValues = map[string]int{
 	"A": 1,
 	"B": 2,
 	"C": 3,
-	"X": 1,
-	"Y": 2,
-	"Z": 3,
 }
 
-var moveMapping = map[string]string{
-	"A": "rock",
-	"B": "paper",
-	"C": "scissors",
-	"X": "rock",
-	"Y": "paper",
-	"Z": "scissors",
+var winAgainst = map[string]string{
+	"A": "B",
+	"B": "C",
+	"C": "A",
 }
 
-func playGame(move1, move2 string) int {
-	if move1 == move2 {
-		return 0
-	}
-	if move1 == "rock" {
-		if move2 == "paper" {
-			return -1
-		} else if move2 == "scissors" {
-			return 1
-		}
-	}
-	if move1 == "paper" {
-		if move2 == "rock" {
-			return 1
-		} else if move2 == "scissors" {
-			return -1
-		}
-	}
-	if move1 == "scissors" {
-		if move2 == "rock" {
-			return -1
-		} else if move2 == "paper" {
-			return 1
-		}
-	}
-
-	return -42
+var loseAgainst = map[string]string{
+	"A": "C",
+	"B": "A",
+	"C": "B",
 }
 
 func main() {
@@ -64,24 +35,18 @@ func main() {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
-
 	score := 0
 	for scanner.Scan() {
 		round := scanner.Text()
 		moves := strings.Split(round, " ")
-		oppMove, myMove := moves[0], moves[1]
-		resultScore := 0
-		gameResult := playGame(moveMapping[oppMove], moveMapping[myMove])
-		if gameResult == 1 {
-			resultScore = 0
-		} else if gameResult == -1 {
-			resultScore = 6
-		} else if gameResult == 0 {
-			resultScore = 3
+		oppMove, myPotentialMove := moves[0], moves[1]
+		if myPotentialMove == "X" {
+			score += 0 + moveValues[loseAgainst[oppMove]]
+		} else if myPotentialMove == "Y" {
+			score += 3 + moveValues[oppMove]
 		} else {
-			panic("okay")
+			score += 6 + moveValues[winAgainst[oppMove]]
 		}
-		score += moveValues[myMove] + resultScore
-		fmt.Println(score)
 	}
+	fmt.Println(score)
 }
