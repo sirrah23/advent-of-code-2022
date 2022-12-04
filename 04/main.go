@@ -20,8 +20,11 @@ func main() {
 	ans := 0
 	for scanner.Scan() {
 		pair1, pair2 := extractPairs(scanner.Text())
-		if (pair1.Low >= pair2.Low && pair1.High <= pair2.High) || (pair2.Low >= pair1.Low && pair2.High <= pair1.High) {
-			ans++
+		for i := pair1.Low; i <= pair1.High; i++ {
+			if i >= pair2.Low && i <= pair2.High {
+				ans++
+				break
+			}
 		}
 	}
 	fmt.Println(ans)
