@@ -15,24 +15,37 @@ func main() {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
-	total := 0
+	var lines []string
 	for scanner.Scan() {
-		rucksack := scanner.Text()
-		compOne, compTwo := rucksack[:len(rucksack)/2], rucksack[len(rucksack)/2:]
-		match := 0
-		for _, c1 := range compOne {
-			for _, c2 := range compTwo {
-				if c1 == c2 {
-					val := int(c1)
-					if 65 <= val && val <= 90 {
-						match = val - 64 + 26
-					} else {
-						match = val - 96
-					}
-				}
-			}
+		lines = append(lines, scanner.Text())
+	}
+	total := 0
+	for i := 0; i < len(lines); i += 3 {
+		res := computeCurr(lines[i : i+3])
+		if 65 <= res && res <= 90 {
+			total += int(res - 64 + 26)
+		} else {
+			total += int(res - 96)
 		}
-		total += match
 	}
 	fmt.Println(total)
+}
+
+func computeCurr(inputs []string) rune {
+	counts := map[rune]int{}
+	for _, input := range inputs {
+		uniqueChars := map[rune]struct{}{}
+		for _, c := range input {
+			uniqueChars[c] = struct{}{}
+		}
+		for u := range uniqueChars {
+			counts[u]++
+		}
+	}
+	for k, v := range counts {
+		if v == 3 {
+			return k
+		}
+	}
+	return 0
 }
