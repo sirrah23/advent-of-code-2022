@@ -53,9 +53,15 @@ func sliceAtoi(in []string) []int {
 
 func main() {
 	stacks := []*Stack{
-		NewStack("N", "Z"),
-		NewStack("D", "C", "M"),
-		NewStack("P"),
+		NewStack("W", "R", "T", "G"),
+		NewStack("W", "V", "S", "M", "P", "H", "C", "G"),
+		NewStack("M", "G", "S", "T", "L", "C"),
+		NewStack("F", "R", "W", "M", "D", "H", "J"),
+		NewStack("J", "F", "W", "S", "H", "L", "Q", "P"),
+		NewStack("S", "M", "F", "N", "D", "J", "P"),
+		NewStack("J", "S", "C", "G", "F", "D", "B", "Z"),
+		NewStack("B", "T", "R"),
+		NewStack("C", "L", "W", "N", "H"),
 	}
 
 	file, err := os.Open("moves.txt")
