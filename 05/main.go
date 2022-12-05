@@ -17,10 +17,22 @@ func (s *Stack) Push(item string) {
 	s.Items = append([]string{item}, s.Items...)
 }
 
+func (s *Stack) MultiPush(items []string) {
+	s.Items = append(items, s.Items...)
+}
+
 func (s *Stack) Pop() string {
 	item := s.Items[0]
 	s.Items = s.Items[1:]
 	return item
+}
+
+func (s *Stack) MultiPop(numItems int) []string {
+	newLst := make([]string, len(s.Items))
+	copy(newLst, s.Items)
+	ret := newLst[:numItems]
+	s.Items = s.Items[numItems:]
+	return ret
 }
 
 func (s *Stack) Peek() string {
@@ -52,6 +64,12 @@ func sliceAtoi(in []string) []int {
 }
 
 func main() {
+	// stacks := []*Stack{
+	// 	NewStack("N", "Z"),
+	// 	NewStack("D", "C", "M"),
+	// 	NewStack("P"),
+	// }
+
 	stacks := []*Stack{
 		NewStack("W", "R", "T", "G"),
 		NewStack("W", "V", "S", "M", "P", "H", "C", "G"),
@@ -71,13 +89,12 @@ func main() {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
+	fmt.Println(stacks[0].Items, stacks[1].Items, stacks[2].Items)
 	for scanner.Scan() {
 		numItems, from, to := ExtractMove(scanner.Text())
-		fmt.Println(numItems, from, to)
-		for i := 0; i < numItems; i++ {
-			item := stacks[from].Pop()
-			stacks[to].Push(item)
-		}
+		items := stacks[from].MultiPop(numItems)
+		stacks[to].MultiPush(items)
+		fmt.Println(stacks[0].Items, stacks[1].Items, stacks[2].Items)
 	}
 	for _, stack := range stacks {
 		fmt.Print(stack.Peek())
