@@ -12,6 +12,13 @@ func main() {
 	runTestPart1()
 	runTestPart2()
 
+	line := getInput()
+
+	fmt.Println(markerSubroutine(line))
+	fmt.Println(messageSubroutine(line))
+}
+
+func getInput() string {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatalf("failed to open input file: %v", err)
@@ -20,32 +27,20 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 	scanner.Scan()
-	line := scanner.Text()
-
-	fmt.Println(markerSubroutine(line))
-	fmt.Println(messageSubroutine(line))
+	return scanner.Text()
 }
 
 func markerSubroutine(input string) int {
-	for i := 0; i+4 < len(input); i++ {
-		currWindow := input[i : i+4]
-		repeat := false
-		for j, char := range currWindow {
-			if strings.Index(currWindow, string(char)) != j {
-				repeat = true
-				break
-			}
-		}
-		if !repeat {
-			return i + 4
-		}
-	}
-	return -1
+	return numDefinedSubroutineRunner(4, input)
 }
 
 func messageSubroutine(input string) int {
-	for i := 0; i+14 < len(input); i++ {
-		currWindow := input[i : i+14]
+	return numDefinedSubroutineRunner(14, input)
+}
+
+func numDefinedSubroutineRunner(markerCount int, input string) int {
+	for i := 0; i+markerCount < len(input); i++ {
+		currWindow := input[i : i+markerCount]
 		repeat := false
 		for j, char := range currWindow {
 			if strings.Index(currWindow, string(char)) != j {
@@ -54,7 +49,7 @@ func messageSubroutine(input string) int {
 			}
 		}
 		if !repeat {
-			return i + 14
+			return i + markerCount
 		}
 	}
 	return -1
